@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css">    
+    <script>
+      function dokeyup(){
+	  var username = document.getElementById("username").value
+	  var elem = document.getElementById("exists")
+	  if (username != ""){
+	      fetch("http://localhost/userexists?username=" + username)
+		  .then(response => {
+		      if (response.status == 200){
+			  elem.innerHTML = "User already exists.";
+		      }else if (response.status == 404){
+			  elem.innerHTML = "&nbsp;";
+		      }else{
+			  // no idea
+			  elem.innerHTML = "";
+		      }
+		  })
+		  .catch(error => {
+		      console.error("Error calling API:", error);
+		  });
+	  }else{
+	      elem.innerHTML = "&nbsp;";
+	  }
+      }	       
+    </script>
+    <title>COMP90074 Assignment 1 - Sign Up</title>
+  </head>
+  <body>
+    <div class="page-container">
+      
+
+      <div class="login-container">
+	<div class="login-header">Sign-Up</div>
+	<div class="login-instructions">Already have an account? <a href="/login">Login</a></div>
+	<div class="login-instructions" id="exists">&nbsp;</div>
+      {% if error %}
+      <div class="login-error">Username already exists.</div>
+      {% endif %}
+
+	<form method="POST" class="login-form">
+    
+	  <input class="login-input" type="text" placeholder="Username" name="username" onkeyup="dokeyup()" id="username" required>
+	  <input class="login-input" type="text" placeholder="Phone number" name="phone" required>
+	  <input class="login-input" type="password" placeholder="Password" name="password" required>
+	  <button class="login-button" type="submit">Sign-Up</button>
+	</form>
+      </div>
+    </div>
+  </body>
+</html>

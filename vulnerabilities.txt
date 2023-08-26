@@ -1,0 +1,56 @@
+COMP90074 Web Security Assignment 1
+Student Name: Quanchi Chen
+Student ID Number: 1358474
+
+
+
+Vulnerability 1: SQL Injection – Union Queries
+
+The vulnerability arises on line 116 in app.py due to missing validation and sanitisation of the user-input username.
+
+Below is the process of exploiting this SQL injection vulnerability.
+1.	Go to the signup page.
+2.	Register a new user with quanchic as both the username and the password.
+3.	Go to the login page.
+4.	Enter quanchic into the Password text field and input the following line into the Username text field.
+	' AND 1=0 UNION SELECT 'admin', (SELECT password FROM users WHERE username='quanchic') --
+5.	You have logged in to the application as the trusted administrator, even if you do not know the administrator's password.
+
+After exploiting this vulnerability, an attacker can perform any actions the administrator can, such as injecting malicious JavaScript code via the messaging input field on the home page.
+
+I fixed this vulnerability by changing lines 116 and 118 using parameterised queries.
+116: sql = "SELECT username, password FROM users WHERE username = ?;"
+118: cursor.execute(sql, [username])
+
+
+
+Vulnerability 2: Stored Server XSS
+
+The vulnerability arises on line 92 in app.py due to not sanitising the administrator-input messages.
+
+Below is the process of exploiting this stored server XSS vulnerability.
+1.	Follow the above process to log in to the application as the administrator.
+2.	Enter the following potentially malicious JavaScript code as the message.
+	<script>alert('Attack!')</script>
+3.	Send that message.
+
+After exploiting this vulnerability, an attacker can inject malicious JavaScript code into the server. Thus, every logged-in user's browser will execute the response from the server containing that code and cause potential harm.
+
+I fixed this vulnerability by making line 92 in app.py as a comment and fixing the indentation of line 93, allowing the server to sanitise the administrator's input.
+
+
+
+Vulnerability 3: Blind SQL Injection
+
+The vulnerability arises on line 137 in app.py due to missing validation and sanitisation of the possibly user-input username. Note that an attacker can know the existence of the userexists API endpoint by observing the browser console when interacting with the signup page.
+
+Below is the process of exploiting this stored server XSS vulnerability.
+1.	Enter the following URL.
+	http://localhost/userexists?username=quanchic%27%20AND%20phone%20=%20%270478275727
+2.	Observe the response from the server to tell if the guessed phone number is correct.
+
+After exploiting this vulnerability, an attacker can write an automated script to query the userexists API endpoint to guess the phone number of a particular user.
+
+I fixed this vulnerability by changing lines 137 and 139 using parameterised queries.
+137: sql = "SELECT * FROM users WHERE username = ?"
+139: cursor.execute(sql, [request.args['username']])

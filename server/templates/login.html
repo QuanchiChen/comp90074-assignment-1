@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <title>COMP90074 Assignment 1 - Login</title>  
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="page-container">
+
+  <div class="login-container">
+    <div class="login-header">Login</div>
+    <div class="login-instructions">Don't have an account? <a href="/signup">Sign-Up</a></div>
+{% if error %}
+  <div class="login-error">Incorrect username or password.</div>
+{% endif %}
+
+
+<form method="POST" action="/login" class="login-form">
+  <input class="login-input" type="text" placeholder="Username" name="username" required/>
+  <input class="login-input" type="password" placeholder="Password" name="password" required/>
+  <button class="login-button" type="submit">Login</button>
+</form>
+</div>
+</div>
+</body>
+</html>

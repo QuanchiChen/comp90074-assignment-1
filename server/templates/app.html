@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <title>COMP90074 Assignment 1</title>  
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="page-container">
+    <div class="login-container">
+      <div class="login-header">Chat App</div>
+      <div class="login-instructions">
+	Welcome, {{session["username"]}}. <a href="/logout">Logout</a>
+      </div>
+      <form method="POST" action="/post" class="message-form">
+	
+	<textarea class="message-input" placeholder="What's on your mind?" name="msg" id="msg"></textarea>
+	<button class="post-button" type="submit">Post</button>
+      </form>
+
+      {% if messages %}
+      {% for msg in messages %}
+      <!-- non-admin messages are already sanitised when they are posted, so we treat them as safe -->
+      <div class="message">
+	<div class="postedby">{{ msg.postedby }}</div>
+	<div class="content">{{ msg.content|safe }}</div>
+	<div class="timestamp">{{ msg.timestamp }} </div>
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>
